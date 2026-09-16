@@ -2,21 +2,55 @@
 
 html,
 body,
-#root{
-    margin:0;
-    padding:0;
-    width:100%;
-    min-height:100vh;
-    font-family:Inter,sans-serif;
-    background:#0f172a;
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: Inter, sans-serif;
 }
 
-body{
-    color:white;
+html {
+  background: #0f172a;
 }
 
-.glass{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.12);
+body {
+  background: #0f172a;
+  color: white;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Glass Effect */
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Light Theme */
+
+html.light {
+  background: #f8fafc;
+}
+
+html.light body {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* Smooth Theme Transition */
+
+* {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
 }
