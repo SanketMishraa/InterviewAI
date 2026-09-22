@@ -2,6 +2,7 @@ require("dotenv/config");
 
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const connectDB = require("./config/db");
 
@@ -10,6 +11,7 @@ const resumeRoutes = require("./routes/resumeRoutes");
 const interviewRoutes = require("./routes/interviewRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const { trusted } = require("mongoose");
 
 const app = express();
 
@@ -19,9 +21,16 @@ const PORT = process.env.PORT || 5000;
 // MIDDLEWARE
 // ==========================================
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // ==========================================
 // HEALTH CHECK

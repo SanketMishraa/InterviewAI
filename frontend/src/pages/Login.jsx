@@ -28,6 +28,7 @@ export default function Login() {
       setLoading(true);
 
       const res = await API.post("/auth/login", formData);
+      console.log(res);
 
       login(res.data.token, res.data.user);
 
