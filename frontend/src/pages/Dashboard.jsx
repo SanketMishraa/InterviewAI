@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import API from "../services/api";
 
 import Sidebar from "../components/Sidebar";
@@ -17,6 +17,7 @@ import {
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -24,6 +25,9 @@ export default function Dashboard() {
         const res = await API.get("/dashboard");
         console.log("Dashboard data:", res.data);
         setDashboard(res.data);
+
+        const data = await API.get("/auth/profile");
+        setUserData(data.data)
       } catch (error) {
         console.error("Dashboard error:", error);
       }
@@ -68,7 +72,7 @@ export default function Dashboard() {
     const averageScore =
       scores.length > 0
         ? scores.reduce((sum, score) => sum + score, 0) /
-          scores.length
+        scores.length
         : 0;
 
     const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
@@ -293,7 +297,7 @@ export default function Dashboard() {
 
         <div className="mt-8">
           <h1 className="text-4xl font-bold">
-            Welcome Back 👋
+            Welcome Back {userData?.name}
           </h1>
 
           <p className="text-slate-400 mt-2">
@@ -522,7 +526,7 @@ export default function Dashboard() {
 
         <div className="mt-8 bg-slate-900 border border-slate-800 rounded-2xl p-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center shrink-0">
               <FiTrendingUp
                 className="text-cyan-400"
                 size={24}
