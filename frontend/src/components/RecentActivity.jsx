@@ -1,39 +1,85 @@
-export default function RecentActivity({ interviews }) {
 
-    return (
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiClipboard } from "react-icons/fi";
 
-        <div className="glass rounded-xl p-6">
+export default function RecentActivity({ interviews = [] }) {
+  const recentInterviews = [...interviews]
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime() || 0;
+      const dateB = new Date(b.createdAt).getTime() || 0;
+      return dateB - dateA;
+    })
+    .slice(0, 5);
 
-            <h2 className="text-2xl font-bold mb-5">
-                Recent Interviews
-            </h2>
+  const formatDate = (value) => {
+    if (!value) return "Date unavailable";
 
-            {interviews.length === 0 ? (
+    const date = new Date(value);
 
-                <p>No Interviews Found.</p>
+    if (Number.isNaN(date.getTime())) {
+      return "Date unavailable";
+    }
 
-            ) : (
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
-                interviews.map((item) => (
-
-                    <div
-                        key={item._id}
-                        className="flex justify-between border-b border-slate-700 py-3"
-                    >
-
-                        <span>{item.role}</span>
-
-                        <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-
-                        <span>{item.score}/10</span>
-
-                    </div>
-
-                ))
-
-            )}
-
+  return (
+    <section className="activity-panel">
+      <header className="activity-header">
+        <div>
+          <h2>Recent Interviews</h2>
+          <p>Your latest practice sessions</p>
         </div>
 
-    );
+        <Link
+          className="activity-see-all"
+          to="/interview-history"
+          aria-label="See all interview history"
+        >
+          See all
+          <FiArrowRight size={15} aria-hidden="true" />
+        </Link>
+      </header>
+
+      {recentInterviews.length === 0 ? (
+        <div className="activity-empty">
+          <FiClipboard size={22} aria-hidden="true" />
+          <p>No interviews yet</p>
+          <span>Your completed practice sessions will appear here.</span>
+        </div>
+      ) : (
+        <div className="activity-list">
+          {recentInterviews.map((item, index) => (
+            <div
+              className="activity-item"
+              key={item._id || `${item.createdAt}-${index}`}
+            >
+              <div className="activity-item-icon" aria-hidden="true">
+                <FiClipboard size={17} />
+              </div>
+
+              <div className="activity-item-details">
+                <span className="activity-role">
+                  {item.role || "Mock Interview"}
+                </span>
+
+                <span className="activity-date">
+                  {formatDate(item.createdAt)}
+                </span>
+              </div>
+
+              <div className="activity-score">
+                <strong>{item.score ?? "—"}</strong>
+                <span>/10</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
